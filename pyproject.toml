@@ -1,0 +1,30 @@
+[project]
+name = "arch-ai-preparation"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+authors = [
+    { name = "David Fuentes", email = "me@david-fz.com" }
+]
+requires-python = ">=3.11"
+dependencies = [
+    "azure-identity>=1.26.0",
+    "openai>=3.24.0",
+]
+
+[project.scripts]
+arch-ai-preparation = "arch_ai_preparation.main:main"
+
+[build-system]
+requires = ["uv_build>=0.12.22,<0.13.0"]
+build-backend = "uv_build"
+
+[dependency-groups]
+dev = [
+    "ruff>=0.16.10",
+]
+
+[tool.ruff.lint]
+select = [
+    "E","F","I","UP","B"
+]
