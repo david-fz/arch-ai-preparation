@@ -27,6 +27,9 @@ cp .env.example .env   # deja activo un solo perfil
 | `LLM_API_KEY` | Si `LLM_AUTH=key` | API key estática (Ollama acepta cualquier valor) |
 | `LLM_AUTH` | No | `key` (por defecto) o `entra` (token de Microsoft Entra ID) |
 | `LLM_TOKEN_SCOPE` | No | Scope para `entra`; por defecto `https://ai.azure.com/.default` |
+| `LLM_PRICE_INPUT` | No | USD por 1M de tokens de entrada (para `cost_usd`) |
+| `LLM_PRICE_CACHED_INPUT` | No | USD por 1M de tokens de entrada cacheados; si falta se usa `LLM_PRICE_INPUT` |
+| `LLM_PRICE_OUTPUT` | No | USD por 1M de tokens de salida |
 
 ### Perfiles
 
@@ -74,6 +77,17 @@ Salida esperada: `Conexión OK · modelo=… · respuesta='OK'`
 | 0 | Conexión correcta |
 | 1 | Error de credenciales, 404 (URL/modelo) o red |
 | 2 | Faltan variables de entorno |
+
+## Telemetría por llamada (`call_llm`)
+
+`arch_ai_preparation.llm.call_llm(messages, max_tokens, temperature, experiment)` hace una
+llamada, imprime una fila (`in/out/cached`, latencia, costo con 6 decimales) y agrega una línea
+JSON a `runs/day1.jsonl` (ignorado por git). Si faltan `LLM_PRICE_INPUT` o `LLM_PRICE_OUTPUT`,
+`cost_usd` queda en `null`.
+
+```bash
+uv run --env-file .env python -c "from arch_ai_preparation.llm import call_llm; call_llm([{'role':'user','content':'Responde solo: OK'}], 16, 0.0, 'smoke')"
+```
 
 ## Solución de problemas
 

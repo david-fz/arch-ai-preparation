@@ -28,4 +28,6 @@ Everything lives in `src/arch_ai_preparation/main.py` (entry point `main`, regis
 - **Exit codes** are part of the contract (documented in README): `0` OK, `1` auth/404/network error, `2` missing env vars. Add new failure paths to the matching code and update the README table if semantics change.
 - Client is configured with `timeout=30.0, max_retries=1` so failures surface quickly.
 
+`src/arch_ai_preparation/llm.py` holds `call_llm(...) -> CallRecord`: times only the API call with `perf_counter`, tolerates missing `usage`/`prompt_tokens_details`, computes `cost_usd` from `LLM_PRICE_*` env vars (USD per 1M tokens; `None` if input/output prices are unset), appends one JSON line to `runs/day1.jsonl` (gitignored) and prints a row. It reuses `resolve_api_key()`/`missing_env()` from `main.py` and lets OpenAI exceptions propagate.
+
 Env var reference and provider profiles are in `README.md` and `.env.example`.
